@@ -2,9 +2,11 @@ using UnityEngine;
 
 public class Monster : Entity
 {
-    private void Update()
+    protected override void Update()
     {
-        if (lockAction || isDead) return;
+        base.Update();
+
+        if (IsLockAction) return;
 
         // always face the player
         transform.LookAt(GameManager.Instance.Player.transform.position);

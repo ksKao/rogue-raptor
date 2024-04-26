@@ -1,5 +1,4 @@
 using System.Linq;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public abstract class Entity : MonoBehaviour
@@ -16,8 +15,7 @@ public abstract class Entity : MonoBehaviour
 
     // states
     protected int currentHp;
-    protected bool isDead = false;
-    protected bool lockAction = false; // if true, character cannot perform any action, used for preventing user spam clicking to perform multiple consecutive action without cooldown
+    protected float lockActionDuration = 0;
 
     // animation parameters
     protected readonly int IS_MOVING_ANIM_PARAM_BOOL = Animator.StringToHash("IsMoving");
@@ -27,6 +25,8 @@ public abstract class Entity : MonoBehaviour
     protected readonly int ATTACK_RATE_ANIM_PARAM_FLOAT = Animator.StringToHash("AttackRate");
     protected readonly int IDLE_ANIM_PARAM_TRIGGER = Animator.StringToHash("Idle");
 
+    protected bool IsLockAction => lockActionDuration > 0;
+    protected string CurrentPlayingAnimation => animator.GetCurrentAnimatorClipInfo(0)[0].clip.name;
     public int AttackDamage => attackDamage;
     public float SecondPerAttack => 1 / attackSpeed;
     public float AttackRate
@@ -46,20 +46,30 @@ public abstract class Entity : MonoBehaviour
         currentHp = maxHp;
     }
 
+    protected virtual void Update()
+    {
+        if (IsLockAction)
+        {
+            lockActionDuration -= Time.deltaTime;
+
+            // if this frame wants to unlock action, reset to idle state
+            if (!IsLockAction)
+                animator.SetTrigger(IDLE_ANIM_PARAM_TRIGGER);
+        }
+    }
+
     private void StopKnockback()
     {
-        UnlockAction();
         rigidBody.isKinematic = true;
-        animator.SetTrigger(IDLE_ANIM_PARAM_TRIGGER);
     }
 
     private void Die()
     {
-        lockAction = true;
-        isDead = true;
+        if (CurrentPlayingAnimation == "Die") return;
 
         animator.SetTrigger(DIE_ANIM_PARAM_TRIGGER);
 
+        LockAction(2);
         Invoke(nameof(DestroyThis), 2f);
     }
 
@@ -68,30 +78,30 @@ public abstract class Entity : MonoBehaviour
         Destroy(gameObject);
     }
 
+    protected void LockAction(float duration)
+    {
+        // if duration is greater than lockActionDuration, means that the lock duration is longer, or some time has passed since last lock, in that case, refresh the lock action to new duration
+        if (duration > lockActionDuration)
+            lockActionDuration = duration;
+    }
+
     protected virtual void Attack()
     {
-        if (lockAction) return;
+        if (IsLockAction) return;
 
-        lockAction = true;
+        LockAction(SecondPerAttack);
 
         // play animation
         animator.SetTrigger(ATTACK_ANIM_PARAM_TRIGGER);
         animator.SetFloat(ATTACK_RATE_ANIM_PARAM_FLOAT, AttackRate);
-
-        // unlock action after attack animation finished
-        Invoke(nameof(UnlockAction), SecondPerAttack);
-    }
-
-    protected void UnlockAction()
-    {
-        lockAction = false;
-        animator.SetTrigger(IDLE_ANIM_PARAM_TRIGGER);
     }
 
     public virtual void TakeDamage(int damage, float knockbackDuration = 0.5f, float knockbackForce = 10)
     {
-        lockAction = true;
-        animator.SetTrigger(HIT_ANIM_PARAM_TRIGGER);
+        if (!IsLockAction)
+            animator.SetTrigger(HIT_ANIM_PARAM_TRIGGER);
+
+        LockAction(knockbackDuration);
 
         currentHp -= damage;
 
