@@ -4,6 +4,6 @@ public class KnightAttack : Effect
     {
         Monster monster = entity as Monster;
 
-        monster.OnHit();
+        monster.TakeDamage(GameManager.Instance.Player.AttackDamage);
     }
 }

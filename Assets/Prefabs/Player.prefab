@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7594322360073390320}
   - component: {fileID: 6792539403899517269}
   - component: {fileID: 4501110081037141107}
+  - component: {fileID: 8036518467297187916}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -49,8 +50,9 @@ MonoBehaviour:
   speed: 3
   attackSpeed: 2
   attackRange: 1.5
+  attackDamage: 2
+  maxHp: 50
   runSpeedMultiplier: 2
-  swordSlash: {fileID: 7279331323497275121}
 --- !u!143 &4501110081037141107
 CharacterController:
   m_ObjectHideFlags: 0
@@ -77,6 +79,33 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1.3, z: 0}
+--- !u!54 &8036518467297187916
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 931374282537220075}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 5
+  m_AngularDrag: 0
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1001 &1624348281255869410
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -992,12 +1021,6 @@ PrefabInstance:
 --- !u!4 &80494103596159117 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7709844326690564921, guid: 4d7aee9ea7f058a4d89d4d75bca04b9e,
-    type: 3}
-  m_PrefabInstance: {fileID: 7774099596983106484}
-  m_PrefabAsset: {fileID: 0}
---- !u!2083052967 &7279331323497275121 stripped
-VisualEffect:
-  m_CorrespondingSourceObject: {fileID: 1073623770746496325, guid: 4d7aee9ea7f058a4d89d4d75bca04b9e,
     type: 3}
   m_PrefabInstance: {fileID: 7774099596983106484}
   m_PrefabAsset: {fileID: 0}

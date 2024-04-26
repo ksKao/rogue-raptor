@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.VFX;
 
@@ -13,6 +14,8 @@ public abstract class Effect : MonoBehaviour
 
     private VisualEffect vfx;
     private new Collider collider;
+
+    [NonSerialized] public int damage;
 
     protected abstract void OnCollide(Entity entity);
 
@@ -47,8 +50,11 @@ public abstract class Effect : MonoBehaviour
     {
         collider.enabled = true;
 
-        vfx.Play();
-        vfx.playRate = playRate;
+        if (vfx != null)
+        {
+            vfx.Play();
+            vfx.playRate = playRate;
+        }
 
         Invoke(nameof(Deactivate), activeTime);
     }

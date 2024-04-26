@@ -12,8 +12,7 @@ public class Player : Entity
     private KnightAttack knightAttack;
 
     // animations
-    private static readonly AnimationHash IDLE_ANIMATION = new("Idle");
-    public static readonly AnimationHash RUN_ANIMATION = new("Run");
+    private readonly int IS_RUNNING_ANIM_PARAM_BOOL = Animator.StringToHash("IsRunning");
 
     // states
     private bool isRunning = false;
@@ -40,8 +39,9 @@ public class Player : Entity
 
     private void FixedUpdate()
     {
-        if (!lockAction)
-            Move(playerInput.Player.Move.ReadValue<Vector2>());
+        if (lockAction || isDead) return;
+
+        Move(playerInput.Player.Move.ReadValue<Vector2>());
     }
 
     private void OnDisable()
@@ -53,28 +53,31 @@ public class Player : Entity
     {
         Vector3 direction = new Vector3(input.x, 0, input.y).normalized;
 
-        if (direction.magnitude >= 0.1f)
+        bool isMoving = direction.magnitude >= 0.1f;
+
+        animator.SetBool(IS_MOVING_ANIM_PARAM_BOOL, isMoving);
+        animator.SetBool(IS_RUNNING_ANIM_PARAM_BOOL, isRunning);
+
+        if (isMoving)
         {
             // https://www.youtube.com/watch?v=4HpC--2iowE
             float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
             float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, 0.1f);
             transform.rotation = Quaternion.Euler(0, angle, 0);
 
+
             if (isRunning)
             {
                 characterController.Move(runSpeedMultiplier * speed * Time.deltaTime * direction);
-                animationController.ChangeAnimationState(RUN_ANIMATION);
             }
             else
             {
                 characterController.Move(speed * Time.deltaTime * direction);
-                animationController.ChangeAnimationState(AnimationController.WALK_ANIMATION);
             }
         }
         else
         {
-            // put transition false here because of weird transition from attack to idle
-            animationController.ChangeAnimationState(IDLE_ANIMATION, 0, false);
+            animator.SetBool(IS_MOVING_ANIM_PARAM_BOOL, false);
         }
     }
 
@@ -84,9 +87,7 @@ public class Player : Entity
 
         base.Attack();
 
-        float secondPerAttack = 1 / attackSpeed;
-        float playRate = secondPerAttack < 1 ? 1 + secondPerAttack : secondPerAttack == 1 ? 1 : 1 - secondPerAttack;
-
-        knightAttack.Activate(playRate, secondPerAttack);
+        float playRate = SecondPerAttack < 1 ? 1 + SecondPerAttack : SecondPerAttack == 1 ? 1 : 1 - SecondPerAttack;
+        knightAttack.Activate(playRate, SecondPerAttack);
     }
 }
