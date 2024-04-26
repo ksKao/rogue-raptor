@@ -15,7 +15,8 @@ public class HealthBar : MonoBehaviour
     private void Update()
     {
         if (AlwaysLookAtCamera)
-            transform.rotation = Quaternion.LookRotation(transform.position - GameManager.Instance.MainCamera.transform.position);
+            // https://www.youtube.com/watch?v=ccqiNWsYJnI
+            transform.LookAt(transform.position + GameManager.Instance.MainCamera.transform.rotation * Vector3.forward, GameManager.Instance.MainCamera.transform.rotation * Vector3.up);
     }
 
     public void SetPercentage(float value)
