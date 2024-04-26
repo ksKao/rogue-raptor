@@ -1,10 +1,14 @@
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class Player : Singleton<Player>
 {
     [SerializeField] private float speed = 3;
     [SerializeField] private float runSpeedMultiplier = 2;
     [SerializeField] private float attackSpeed = 1; // How many times this character can attack in one second
+
+    [Header("VFX")]
+    [SerializeField] private VisualEffect swordSlash;
 
     private PlayerInput playerInput;
     private CharacterController characterController;
@@ -80,8 +84,17 @@ public class Player : Singleton<Player>
 
         lockAction = true;
 
+        // calculate animation speed, use 1 / x because thats how many attack the player can perform in a second
         float normalizedTime = 1 / attackSpeed;
+
+        // play animation
         anim.ChangeAnimationState(PlayerAnimation.ATTACK, normalizedTime);
+
+        // play vfx
+        swordSlash.Play();
+        swordSlash.playRate = normalizedTime < 1 ? 1 + normalizedTime : normalizedTime == 1 ? 1 : 1 - normalizedTime;
+
+        // unlock action after animation finished
         Invoke(nameof(UnlockAction), normalizedTime);
     }
 

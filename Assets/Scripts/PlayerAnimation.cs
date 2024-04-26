@@ -25,6 +25,6 @@ public class PlayerAnimation
 
         currentState = newState;
 
-        animator.CrossFade(newState, 0.1f, 0, normalizedTime == null ? 1 : normalizedTime.Value);
+        animator.CrossFade(newState, 0, 0, normalizedTime == null ? 1 : normalizedTime.Value);
     }
 }
