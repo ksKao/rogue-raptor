@@ -1,16 +1,15 @@
 using UnityEngine;
-using UnityEngine.VFX;
 
 public class Player : Entity
 {
     [SerializeField] private float runSpeedMultiplier = 2;
 
-    [Header("VFX")]
-    [SerializeField] private VisualEffect swordSlash;
-
     // components
     private PlayerInput playerInput;
     private CharacterController characterController;
+
+    // effects
+    private KnightAttack knightAttack;
 
     // animations
     private static readonly AnimationHash IDLE_ANIMATION = new("Idle");
@@ -27,6 +26,7 @@ public class Player : Entity
         playerInput = new PlayerInput();
 
         characterController = GetComponent<CharacterController>();
+        knightAttack = GetComponentInChildren<KnightAttack>();
 
         playerInput.Player.Run.started += ctx => isRunning = true;
         playerInput.Player.Run.canceled += ctx => isRunning = false;
@@ -80,24 +80,13 @@ public class Player : Entity
 
     protected override void Attack()
     {
+        if (lockAction) return;
+
         base.Attack();
 
-        // check hit
-        // https://docs.unity3d.com/ScriptReference/Physics.CapsuleCast.html
-        Vector3 p1 = transform.position + characterController.center + 0.5f * -characterController.height * Vector3.up;
-        Vector3 p2 = p1 + Vector3.up * characterController.height;
-        if (Physics.CapsuleCast(p1, p2, characterController.radius, transform.forward, out RaycastHit hit, attackRange))
-        {
-            if (hit.transform.TryGetComponent(out Monster monster))
-            {
-                monster.OnHit();
-            }
-        }
-
         float secondPerAttack = 1 / attackSpeed;
+        float playRate = secondPerAttack < 1 ? 1 + secondPerAttack : secondPerAttack == 1 ? 1 : 1 - secondPerAttack;
 
-        // play vfx
-        swordSlash.Play();
-        swordSlash.playRate = secondPerAttack < 1 ? 1 + secondPerAttack : secondPerAttack == 1 ? 1 : 1 - secondPerAttack;
+        knightAttack.Activate(playRate, secondPerAttack);
     }
 }
