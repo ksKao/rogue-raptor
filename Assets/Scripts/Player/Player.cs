@@ -6,6 +6,7 @@ public class Player : Singleton<Player>
     [SerializeField] private float speed = 3;
     [SerializeField] private float runSpeedMultiplier = 2;
     [SerializeField] private float attackSpeed = 1; // How many times this character can attack in one second
+    [SerializeField] private float attackRange = 1.5f;
 
     [Header("VFX")]
     [SerializeField] private VisualEffect swordSlash;
@@ -14,15 +15,15 @@ public class Player : Singleton<Player>
     private PlayerInput playerInput;
     private CharacterController characterController;
     private AnimationController animationController; // custom class for handling animation
-    private float turnSmoothVelocity; // used for turning character during movement
 
     // animations
-    private static readonly int IDLE_ANIMATION = Animator.StringToHash("Idle");
-    public static readonly int RUN_ANIMATION = Animator.StringToHash("Run");
+    private static readonly AnimationHash IDLE_ANIMATION = new("Idle");
+    public static readonly AnimationHash RUN_ANIMATION = new("Run");
 
     // states
     private bool isRunning = false;
     private bool lockAction = false; // if true, character cannot perform any action, used for preventing user spam clicking to perform multiple consecutive action without cooldown
+    private float turnSmoothVelocity; // used for turning character during movement
 
     protected override void Awake()
     {
@@ -88,18 +89,30 @@ public class Player : Singleton<Player>
 
         lockAction = true;
 
+        // check hit
+        // https://docs.unity3d.com/ScriptReference/Physics.CapsuleCast.html
+        Vector3 p1 = transform.position + characterController.center + 0.5f * -characterController.height * Vector3.up;
+        Vector3 p2 = p1 + Vector3.up * characterController.height;
+        if (Physics.CapsuleCast(p1, p2, characterController.radius, transform.forward, out RaycastHit hit, attackRange))
+        {
+            if (hit.transform.TryGetComponent(out Monster monster))
+            {
+                monster.OnHit();
+            }
+        }
+
         // calculate animation speed, use 1 / x because thats how many attack the player can perform in a second
-        float normalizedTime = 1 / attackSpeed;
+        float secondPerAttack = 1 / attackSpeed;
 
         // play animation
-        animationController.ChangeAnimationState(AnimationController.ATTACK_ANIMATION, normalizedTime);
+        animationController.ChangeAnimationState(AnimationController.ATTACK_ANIMATION, secondPerAttack);
+
+        // unlock action after attack animation finished
+        Invoke(nameof(UnlockAction), secondPerAttack);
 
         // play vfx
         swordSlash.Play();
-        swordSlash.playRate = normalizedTime < 1 ? 1 + normalizedTime : normalizedTime == 1 ? 1 : 1 - normalizedTime;
-
-        // unlock action after animation finished
-        Invoke(nameof(UnlockAction), normalizedTime);
+        swordSlash.playRate = secondPerAttack < 1 ? 1 + secondPerAttack : secondPerAttack == 1 ? 1 : 1 - secondPerAttack;
     }
 
     private void UnlockAction()

@@ -48,7 +48,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 3
   runSpeedMultiplier: 2
-  attackSpeed: 3
+  attackSpeed: 2
+  attackRange: 1.5
   swordSlash: {fileID: 7279331323497275121}
 --- !u!143 &4501110081037141107
 CharacterController:

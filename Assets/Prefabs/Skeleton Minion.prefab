@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7466983667518528570}
   - component: {fileID: 2577139205373826974}
+  - component: {fileID: 1434135031704096648}
+  - component: {fileID: 56454276430655131}
   m_Layer: 0
   m_Name: Skeleton Minion
   m_TagString: Untagged
@@ -56,6 +58,48 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &1434135031704096648
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6123733066684204966}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1dd05caec292e0b4a8064ca655e045e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 3
+  attackRange: 1.5
+  attackSpeed: 1
+--- !u!54 &56454276430655131
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6123733066684204966}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 5
+  m_AngularDrag: 0
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1001 &435061586172009418
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -121,7 +165,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -7655872403321392018, guid: 9c6e0ef4513146d418222f23b51cdddd,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7703108704095005091}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 9c6e0ef4513146d418222f23b51cdddd,
         type: 3}
@@ -150,7 +198,7 @@ Animator:
   m_GameObject: {fileID: 777099517223659163}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: cda5abd316985e740b96c50a38830304, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -161,3 +209,83 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &1425748451814846372 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -7655872403321392018, guid: 9c6e0ef4513146d418222f23b51cdddd,
+    type: 3}
+  m_PrefabInstance: {fileID: 435061586172009418}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &7884758346172993096
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1425748451814846372}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 76ab1a3cdda451c41af8da024570a5b7,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 76ab1a3cdda451c41af8da024570a5b7,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.145
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 76ab1a3cdda451c41af8da024570a5b7,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 76ab1a3cdda451c41af8da024570a5b7,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -0.7561082
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 76ab1a3cdda451c41af8da024570a5b7,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.04899965
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 76ab1a3cdda451c41af8da024570a5b7,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.0569907
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 76ab1a3cdda451c41af8da024570a5b7,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.6501165
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 76ab1a3cdda451c41af8da024570a5b7,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 76ab1a3cdda451c41af8da024570a5b7,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 76ab1a3cdda451c41af8da024570a5b7,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 76ab1a3cdda451c41af8da024570a5b7,
+        type: 3}
+      propertyPath: m_Name
+      value: Skeleton_Axe
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 76ab1a3cdda451c41af8da024570a5b7, type: 3}
+--- !u!4 &7703108704095005091 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 76ab1a3cdda451c41af8da024570a5b7,
+    type: 3}
+  m_PrefabInstance: {fileID: 7884758346172993096}
+  m_PrefabAsset: {fileID: 0}

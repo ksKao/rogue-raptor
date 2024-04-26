@@ -8,6 +8,7 @@ public class Monster : MonoBehaviour
 
     // components
     private AnimationController animationController;
+    private Rigidbody rigidBody;
 
     // states
     private bool lockAction = false;
@@ -15,10 +16,14 @@ public class Monster : MonoBehaviour
     private void Awake()
     {
         animationController = new AnimationController(GetComponentInChildren<Animator>());
+        rigidBody = GetComponent<Rigidbody>();
     }
 
     private void Update()
     {
+        // always face the player
+        transform.LookAt(Player.Instance.transform.position);
+
         // dont do anything if lock action is set to true, prevent monster to move while attacking
         if (lockAction) return;
 
@@ -31,8 +36,6 @@ public class Monster : MonoBehaviour
 
     private void Move()
     {
-        transform.LookAt(Player.Instance.transform.position);
-
         transform.position += speed * Time.deltaTime * transform.forward;
 
         animationController.ChangeAnimationState(AnimationController.WALK_ANIMATION);
@@ -51,5 +54,26 @@ public class Monster : MonoBehaviour
     private void UnlockAction()
     {
         lockAction = false;
+    }
+
+    private void StopKnockback()
+    {
+        UnlockAction();
+        rigidBody.isKinematic = true;
+        animationController.ChangeAnimationState(AnimationController.WALK_ANIMATION);
+    }
+
+    public void OnHit()
+    {
+        if (animationController.CurrentAnimationState == AnimationController.HIT_ANIMATION) return;
+
+        lockAction = true;
+        float knockbackDuration = 0.5f;
+        animationController.ChangeAnimationState(AnimationController.HIT_ANIMATION, knockbackDuration);
+
+        rigidBody.isKinematic = false;
+        rigidBody.AddForce(Player.Instance.transform.forward * 10, ForceMode.Impulse);
+
+        Invoke(nameof(StopKnockback), knockbackDuration);
     }
 }
