@@ -651,7 +651,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 4f430c142110fdc41b4da84090c40bb9,
         type: 3}
       propertyPath: m_Name
-      value: Knight
+      value: Model
       objectReference: {fileID: 0}
     - target: {fileID: 1396427355593038087, guid: 4f430c142110fdc41b4da84090c40bb9,
         type: 3}

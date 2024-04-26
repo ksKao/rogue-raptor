@@ -28,7 +28,7 @@ public abstract class Entity : MonoBehaviour
 
     protected bool IsLockAction => lockActionDuration > 0;
     protected string CurrentPlayingAnimation => animator.GetCurrentAnimatorClipInfo(0)[0].clip.name;
-    protected int CurrentHp
+    public int CurrentHp
     {
         get => currentHp;
         set
@@ -75,7 +75,14 @@ public abstract class Entity : MonoBehaviour
         rigidBody.isKinematic = true;
     }
 
-    private void Die()
+    protected void LockAction(float duration)
+    {
+        // if duration is greater than lockActionDuration, means that the lock duration is longer, or some time has passed since last lock, in that case, refresh the lock action to new duration
+        if (duration > lockActionDuration)
+            lockActionDuration = duration;
+    }
+
+    protected virtual void Die()
     {
         if (CurrentPlayingAnimation == "Die") return;
 
@@ -84,13 +91,6 @@ public abstract class Entity : MonoBehaviour
 
         LockAction(2);
         Destroy(gameObject, 2f);
-    }
-
-    protected void LockAction(float duration)
-    {
-        // if duration is greater than lockActionDuration, means that the lock duration is longer, or some time has passed since last lock, in that case, refresh the lock action to new duration
-        if (duration > lockActionDuration)
-            lockActionDuration = duration;
     }
 
     protected virtual void Attack()

@@ -713,7 +713,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 9c6e0ef4513146d418222f23b51cdddd,
         type: 3}
       propertyPath: m_Name
-      value: Skeleton Minion
+      value: Model
       objectReference: {fileID: 0}
     - target: {fileID: 2196004506624635508, guid: 9c6e0ef4513146d418222f23b51cdddd,
         type: 3}

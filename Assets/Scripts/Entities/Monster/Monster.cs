@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Monster : Entity
@@ -23,5 +24,19 @@ public class Monster : Entity
         transform.position += speed * Time.deltaTime * transform.forward;
 
         animator.SetBool(IS_MOVING_ANIM_PARAM_BOOL, true);
+    }
+
+    protected override void Die()
+    {
+        base.Die();
+
+        if (GameManager.Instance.Random.NextDouble() > 0)
+        {
+            List<Loot> allLoots = GameManager.Instance.AllLoots;
+            Loot randomLoot = allLoots[GameManager.Instance.Random.Next(allLoots.Count)];
+
+            randomLoot = Instantiate(randomLoot);
+            randomLoot.transform.position = transform.position;
+        }
     }
 }
