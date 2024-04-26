@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7466983667518528570}
   - component: {fileID: 2577139205373826974}
-  - component: {fileID: 1434135031704096648}
   - component: {fileID: 56454276430655131}
+  - component: {fileID: 1434135031704096648}
   m_Layer: 0
   m_Name: Skeleton Minion
   m_TagString: Untagged
@@ -58,21 +58,6 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &1434135031704096648
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6123733066684204966}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1dd05caec292e0b4a8064ca655e045e8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 3
-  attackRange: 1.5
-  attackSpeed: 1
 --- !u!54 &56454276430655131
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -100,6 +85,21 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1434135031704096648
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6123733066684204966}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1dd05caec292e0b4a8064ca655e045e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 3
+  attackRange: 1.5
+  attackSpeed: 1
 --- !u!1001 &435061586172009418
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -1,12 +1,9 @@
 using UnityEngine;
 using UnityEngine.VFX;
 
-public class Player : Singleton<Player>
+public class Player : Entity
 {
-    [SerializeField] private float speed = 3;
     [SerializeField] private float runSpeedMultiplier = 2;
-    [SerializeField] private float attackSpeed = 1; // How many times this character can attack in one second
-    [SerializeField] private float attackRange = 1.5f;
 
     [Header("VFX")]
     [SerializeField] private VisualEffect swordSlash;
@@ -14,7 +11,6 @@ public class Player : Singleton<Player>
     // components
     private PlayerInput playerInput;
     private CharacterController characterController;
-    private AnimationController animationController; // custom class for handling animation
 
     // animations
     private static readonly AnimationHash IDLE_ANIMATION = new("Idle");
@@ -22,7 +18,6 @@ public class Player : Singleton<Player>
 
     // states
     private bool isRunning = false;
-    private bool lockAction = false; // if true, character cannot perform any action, used for preventing user spam clicking to perform multiple consecutive action without cooldown
     private float turnSmoothVelocity; // used for turning character during movement
 
     protected override void Awake()
@@ -30,7 +25,6 @@ public class Player : Singleton<Player>
         base.Awake();
 
         playerInput = new PlayerInput();
-        animationController = new AnimationController(GetComponentInChildren<Animator>());
 
         characterController = GetComponent<CharacterController>();
 
@@ -79,15 +73,14 @@ public class Player : Singleton<Player>
         }
         else
         {
-            animationController.ChangeAnimationState(IDLE_ANIMATION);
+            // put transition false here because of weird transition from attack to idle
+            animationController.ChangeAnimationState(IDLE_ANIMATION, 0, false);
         }
     }
 
-    private void Attack()
+    protected override void Attack()
     {
-        if (lockAction) return;
-
-        lockAction = true;
+        base.Attack();
 
         // check hit
         // https://docs.unity3d.com/ScriptReference/Physics.CapsuleCast.html
@@ -101,22 +94,10 @@ public class Player : Singleton<Player>
             }
         }
 
-        // calculate animation speed, use 1 / x because thats how many attack the player can perform in a second
         float secondPerAttack = 1 / attackSpeed;
-
-        // play animation
-        animationController.ChangeAnimationState(AnimationController.ATTACK_ANIMATION, secondPerAttack);
-
-        // unlock action after attack animation finished
-        Invoke(nameof(UnlockAction), secondPerAttack);
 
         // play vfx
         swordSlash.Play();
         swordSlash.playRate = secondPerAttack < 1 ? 1 + secondPerAttack : secondPerAttack == 1 ? 1 : 1 - secondPerAttack;
-    }
-
-    private void UnlockAction()
-    {
-        lockAction = false;
     }
 }

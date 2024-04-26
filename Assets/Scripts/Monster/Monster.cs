@@ -1,34 +1,26 @@
 using UnityEngine;
 
-public class Monster : MonoBehaviour
+public class Monster : Entity
 {
-    [SerializeField] private float speed = 3;
-    [SerializeField] private float attackRange = 1.5f;
-    [SerializeField] private float attackSpeed = 1; // How many times this unit can attack in one second
-
     // components
-    private AnimationController animationController;
     private Rigidbody rigidBody;
 
-    // states
-    private bool lockAction = false;
-
-    private void Awake()
+    protected override void Awake()
     {
-        animationController = new AnimationController(GetComponentInChildren<Animator>());
+        base.Awake();
         rigidBody = GetComponent<Rigidbody>();
     }
 
     private void Update()
     {
         // always face the player
-        transform.LookAt(Player.Instance.transform.position);
+        transform.LookAt(GameManager.Instance.Player.transform.position);
 
         // dont do anything if lock action is set to true, prevent monster to move while attacking
         if (lockAction) return;
 
         // check player is in attack range, if yes, attack, else just chase after player
-        if (Vector3.Distance(Player.Instance.transform.position, transform.position) <= attackRange)
+        if (Vector3.Distance(GameManager.Instance.Player.transform.position, transform.position) <= attackRange)
             Attack();
         else
             Move();
@@ -39,21 +31,6 @@ public class Monster : MonoBehaviour
         transform.position += speed * Time.deltaTime * transform.forward;
 
         animationController.ChangeAnimationState(AnimationController.WALK_ANIMATION);
-    }
-
-    private void Attack()
-    {
-        if (lockAction) return;
-
-        lockAction = true;
-        animationController.ChangeAnimationState(AnimationController.ATTACK_ANIMATION, 1 / attackSpeed);
-
-        Invoke(nameof(UnlockAction), attackSpeed);
-    }
-
-    private void UnlockAction()
-    {
-        lockAction = false;
     }
 
     private void StopKnockback()
@@ -72,7 +49,7 @@ public class Monster : MonoBehaviour
         animationController.ChangeAnimationState(AnimationController.HIT_ANIMATION, knockbackDuration);
 
         rigidBody.isKinematic = false;
-        rigidBody.AddForce(Player.Instance.transform.forward * 10, ForceMode.Impulse);
+        rigidBody.AddForce(GameManager.Instance.Player.transform.forward * 10, ForceMode.Impulse);
 
         Invoke(nameof(StopKnockback), knockbackDuration);
     }

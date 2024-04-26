@@ -28,7 +28,7 @@ public class AnimationController
     /// </summary>
     /// <param name="newState">State Hash name</param>
     /// <param name="time">Fixed time to play the animation in.</param>
-    public void ChangeAnimationState(AnimationHash newState, float time = 0)
+    public void ChangeAnimationState(AnimationHash newState, float time = 0, bool transition = true)
     {
         if (currentState == newState) return;
 
@@ -36,7 +36,11 @@ public class AnimationController
 
         if (time == 0) time = CurrentAnimationLength;
 
-        animator.CrossFade(newState.hash, 0.1f);
+        if (transition)
+            animator.CrossFade(newState.hash, 0.1f);
+        else
+            animator.Play(newState.hash);
+
         animator.speed = CurrentAnimationLength / time;
     }
 }
