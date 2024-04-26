@@ -10,11 +10,12 @@ public abstract class Entity : MonoBehaviour
     [SerializeField] protected int maxHp;
 
     // components
+    protected HealthBar healthBar;
     protected Animator animator;
     protected Rigidbody rigidBody;
 
     // states
-    protected int currentHp;
+    private int currentHp;
     protected float lockActionDuration = 0;
 
     // animation parameters
@@ -27,6 +28,16 @@ public abstract class Entity : MonoBehaviour
 
     protected bool IsLockAction => lockActionDuration > 0;
     protected string CurrentPlayingAnimation => animator.GetCurrentAnimatorClipInfo(0)[0].clip.name;
+    protected int CurrentHp
+    {
+        get => currentHp;
+        set
+        {
+            currentHp = Mathf.Clamp(value, 0, maxHp);
+            healthBar.SetPercentage((float) currentHp / maxHp);
+        }
+    }
+
     public int AttackDamage => attackDamage;
     public float SecondPerAttack => 1 / attackSpeed;
     public float AttackRate
@@ -40,6 +51,7 @@ public abstract class Entity : MonoBehaviour
 
     protected virtual void Awake()
     {
+        healthBar = GetComponentInChildren<HealthBar>();
         animator = GetComponentInChildren<Animator>();
         rigidBody = GetComponent<Rigidbody>();
 
@@ -68,14 +80,10 @@ public abstract class Entity : MonoBehaviour
         if (CurrentPlayingAnimation == "Die") return;
 
         animator.SetTrigger(DIE_ANIM_PARAM_TRIGGER);
+        healthBar.gameObject.SetActive(false);
 
         LockAction(2);
-        Invoke(nameof(DestroyThis), 2f);
-    }
-
-    private void DestroyThis()
-    {
-        Destroy(gameObject);
+        Destroy(gameObject, 2f);
     }
 
     protected void LockAction(float duration)
@@ -103,9 +111,9 @@ public abstract class Entity : MonoBehaviour
 
         LockAction(knockbackDuration);
 
-        currentHp -= damage;
+        CurrentHp -= damage;
 
-        if (currentHp <= 0)
+        if (CurrentHp <= 0)
         {
             Die();
         }

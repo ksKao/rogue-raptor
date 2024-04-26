@@ -22,6 +22,10 @@ public class Player : Entity
     {
         base.Awake();
 
+        // override healthBar to use the one in UIManager instead
+        healthBar = UIManager.Instance.PlayerHealthBar;
+        healthBar.AlwaysLookAtCamera = false;
+
         playerInput = new PlayerInput();
 
         characterController = GetComponent<CharacterController>();
