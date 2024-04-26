@@ -10,22 +10,26 @@ public class Player : Singleton<Player>
     [Header("VFX")]
     [SerializeField] private VisualEffect swordSlash;
 
+    // components
     private PlayerInput playerInput;
     private CharacterController characterController;
-    private PlayerAnimation anim; // custom class for handling animation
+    private AnimationController animationController; // custom class for handling animation
     private float turnSmoothVelocity; // used for turning character during movement
+
+    // animations
+    private static readonly int IDLE_ANIMATION = Animator.StringToHash("Idle");
+    public static readonly int RUN_ANIMATION = Animator.StringToHash("Run");
+
+    // states
     private bool isRunning = false;
     private bool lockAction = false; // if true, character cannot perform any action, used for preventing user spam clicking to perform multiple consecutive action without cooldown
-
-
-    public float AttackSpeed => attackSpeed;
 
     protected override void Awake()
     {
         base.Awake();
 
         playerInput = new PlayerInput();
-        anim = new PlayerAnimation(GetComponentInChildren<Animator>());
+        animationController = new AnimationController(GetComponentInChildren<Animator>());
 
         characterController = GetComponent<CharacterController>();
 
@@ -64,17 +68,17 @@ public class Player : Singleton<Player>
             if (isRunning)
             {
                 characterController.Move(runSpeedMultiplier * speed * Time.deltaTime * direction);
-                anim.ChangeAnimationState(PlayerAnimation.RUN);
+                animationController.ChangeAnimationState(RUN_ANIMATION);
             }
             else
             {
                 characterController.Move(speed * Time.deltaTime * direction);
-                anim.ChangeAnimationState(PlayerAnimation.WALK);
+                animationController.ChangeAnimationState(AnimationController.WALK_ANIMATION);
             }
         }
         else
         {
-            anim.ChangeAnimationState(PlayerAnimation.IDLE);
+            animationController.ChangeAnimationState(IDLE_ANIMATION);
         }
     }
 
@@ -88,7 +92,7 @@ public class Player : Singleton<Player>
         float normalizedTime = 1 / attackSpeed;
 
         // play animation
-        anim.ChangeAnimationState(PlayerAnimation.ATTACK, normalizedTime);
+        animationController.ChangeAnimationState(AnimationController.ATTACK_ANIMATION, normalizedTime);
 
         // play vfx
         swordSlash.Play();

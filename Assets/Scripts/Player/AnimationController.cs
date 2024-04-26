@@ -1,20 +1,19 @@
 using UnityEngine;
 
-public class PlayerAnimation
+public class AnimationController
 {
     private readonly Animator animator;
-    private int currentState = IDLE;
+    private int currentState;
 
-    public static readonly int IDLE = Animator.StringToHash("Idle");
-    public static readonly int WALK = Animator.StringToHash("Walk");
-    public static readonly int RUN = Animator.StringToHash("Run");
-    public static readonly int ATTACK = Animator.StringToHash("Attack");
+    // some common animations
+    public static readonly int WALK_ANIMATION = Animator.StringToHash("Walk");
+    public static readonly int ATTACK_ANIMATION = Animator.StringToHash("Attack");
 
     public int CurrentState => currentState;
 
-    private PlayerAnimation() { }
+    private AnimationController() { }
 
-    public PlayerAnimation(Animator animator)
+    public AnimationController(Animator animator)
     {
         this.animator = animator;
     }
