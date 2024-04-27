@@ -17,6 +17,6 @@ public class SkeletonMinion : Monster
 
         base.Attack();
 
-        skeletonAttack.Activate();
+        skeletonAttack.Activate(this);
     }
 }

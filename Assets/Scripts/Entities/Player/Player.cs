@@ -79,10 +79,6 @@ public class Player : Entity
                 characterController.Move(speed * Time.deltaTime * direction);
             }
         }
-        else
-        {
-            animator.SetBool(IS_MOVING_ANIM_PARAM_BOOL, false);
-        }
     }
 
     protected override void Attack()
@@ -92,12 +88,15 @@ public class Player : Entity
         base.Attack();
 
         float playRate = SecondPerAttack < 1 ? 1 + SecondPerAttack : SecondPerAttack == 1 ? 1 : 1 - SecondPerAttack;
-        knightAttack.Activate(playRate, SecondPerAttack);
+        knightAttack.Activate(this, playRate, SecondPerAttack);
     }
 
-    public override void TakeDamage(int damage, float knockbackDuration = 0.5f, float knockbackForce = 10)
+    public override void TakeDamage(int damage, Entity source = null, float knockbackDuration = 0.5f, float knockbackForce = 10)
     {
+        if (!IsLockAction)
+            transform.LookAt(source.transform);
+
         // do not knockback player
-        base.TakeDamage(damage, 0, 0);
+        base.TakeDamage(damage, source, knockbackDuration, 0);
     }
 }

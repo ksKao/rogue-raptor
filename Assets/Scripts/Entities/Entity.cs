@@ -104,7 +104,7 @@ public abstract class Entity : MonoBehaviour
         animator.SetFloat(ATTACK_RATE_ANIM_PARAM_FLOAT, AttackRate);
     }
 
-    public virtual void TakeDamage(int damage, float knockbackDuration = 0.5f, float knockbackForce = 10)
+    public virtual void TakeDamage(int damage, Entity source = null, float knockbackDuration = 0.5f, float knockbackForce = 10)
     {
         if (!IsLockAction)
             animator.SetTrigger(HIT_ANIM_PARAM_TRIGGER);
@@ -123,6 +123,5 @@ public abstract class Entity : MonoBehaviour
             rigidBody.AddForce(GameManager.Instance.Player.transform.forward * knockbackForce, ForceMode.Impulse);
             Invoke(nameof(StopKnockback), knockbackDuration);
         }
-
     }
 }

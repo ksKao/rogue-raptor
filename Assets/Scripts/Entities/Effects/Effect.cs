@@ -15,6 +15,8 @@ public abstract class Effect : MonoBehaviour
     private VisualEffect vfx;
     private new Collider collider;
 
+    protected Entity source;
+
     [NonSerialized] public int damage;
 
     protected abstract void OnCollide(Entity entity);
@@ -46,9 +48,10 @@ public abstract class Effect : MonoBehaviour
         }
     }
 
-    public void Activate(float playRate = 1, float activeTime = 1)
+    public void Activate(Entity source, float playRate = 1, float activeTime = 1)
     {
         collider.enabled = true;
+        this.source = source;
 
         if (vfx != null)
         {
